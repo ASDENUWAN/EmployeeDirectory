@@ -1,0 +1,86 @@
+@model IEnumerable<EmployeeDirectory.Models.Employee>
+@{
+    ViewData["Title"] = "Employees";
+    // Grab the current search term so we can re‑fill the input
+    var currentFilter = ViewData["CurrentFilter"] as string;
+}
+
+<h2>Employees</h2>
+
+<!-- Search form -->
+<form asp-action="Index" method="get" class="row g-2 mb-3">
+  <div class="col-auto">
+    <input
+      type="text"
+      name="searchString"
+      value="@currentFilter"
+      class="form-control"
+      placeholder="Search by name or department" />
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-search"></i> Search
+    </button>
+  </div>
+  <div class="col-auto">
+    <a asp-action="Index" class="btn btn-outline-secondary">
+      <i class="bi bi-x-lg"></i> Clear
+    </a>
+  </div>
+</form>
+
+<p>
+  <a asp-action="Create" class="btn btn-success">
+    <i class="bi bi-plus-lg"></i> Add New
+  </a>
+</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>@Html.DisplayNameFor(m => m.FullName)</th>
+      <th>@Html.DisplayNameFor(m => m.Email)</th>
+      <th>@Html.DisplayNameFor(m => m.Position)</th>
+      <th>@Html.DisplayNameFor(m => m.Department)</th>
+      <th>@Html.DisplayNameFor(m => m.HireDate)</th>
+      <th class="text-center">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @if (!Model.Any())
+    {
+        <tr>
+          <td colspan="6" class="text-center text-muted">
+            No employees found.
+          </td>
+        </tr>
+    }
+    else
+    {
+      foreach (var e in Model)
+      {
+        <tr>
+          <td>@e.FullName</td>
+          <td>@e.Email</td>
+          <td>@e.Position</td>
+          <td>@e.Department</td>
+          <td>@e.HireDate.ToShortDateString()</td>
+          <td class="text-center">
+            <a asp-action="Edit" asp-route-id="@e.EmployeeId"
+               class="btn btn-sm btn-outline-primary me-1" title="Edit">
+              <i class="bi bi-pencil-fill"></i>
+            </a>
+            <a asp-action="Details" asp-route-id="@e.EmployeeId"
+               class="btn btn-sm btn-outline-info me-1" title="Details">
+              <i class="bi bi-eye-fill"></i>
+            </a>
+            <a asp-action="Delete" asp-route-id="@e.EmployeeId"
+               class="btn btn-sm btn-outline-danger" title="Delete">
+              <i class="bi bi-trash-fill"></i>
+            </a>
+          </td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>
